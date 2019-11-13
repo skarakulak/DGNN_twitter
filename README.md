@@ -4,6 +4,30 @@
 
 ![twitter graph](imgs/twitter_graph.png)
 
+
+
+## Data Analysis
+
+- How much they retweet?
+
+  ![rt0](imgs/rt_a_1.png)
+
+  ![rt0](imgs/rt_a_2.png)
+
+  ![rt0](imgs/rt_a_3.png)
+
+- How many times they got retweeted?
+
+  ​		
+
+  ![rt0](imgs/rt_b_1.png)
+
+  ![rt0](imgs/rt_b_2.png)
+
+  ![rt0](imgs/rt_b_3.png)
+
+
+
 # TO-DO List
 
 ## Nov 13
