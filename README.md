@@ -15,4 +15,12 @@
     > **users_neighborhood.csv**: this file has two rows related to the IDs: `user_id` is the id used in the graph which is on Kaggle and `user_id_original` links with the tweets!
 
 - [ ] Investigate the statistics of the data. Lei mentioned GNNs might not work if within-the-same-class edges are not more then out-of-the-same-class edges. So check if hateful users are connected more with other hateful users. Stuff about the smoothing.
+- [ ] Set bag-of-words baselines
 - [ ] Review the methods that are applied on this dataset. Check the papers that cites the [original paper](https://arxiv.org/abs/1803.08977). 
+
+
+
+### Understanding Dataset 
+
+- [ ] Check if RT's have text
+- [ ] How they labeled hateful users. Did they classify using the author's tweets, or were retweets considered as well.
