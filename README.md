@@ -28,6 +28,30 @@
 
 
 
+----------
+
+- How much they reply?
+
+  ![rt0](imgs/rp_a_1.png)
+
+  ![rt0](imgs/rp_a_2.png)
+
+  ![rt0](imgs/rp_a_3.png)
+
+- How many times they receive a reply?
+
+  ​		
+
+  ![rt0](imgs/rp_b_1.png)
+
+  ![rt0](imgs/rp_b_2.png)
+
+  ![rt0](imgs/rp_b_3.png)
+
+
+
+
+
 # TO-DO List
 
 ## Nov 13
@@ -42,7 +66,7 @@
     >
     > **users_neighborhood.csv**: this file has two rows related to the IDs: `user_id` is the id used in the graph which is on Kaggle and `user_id_original` links with the tweets!
 
-- [ ] Investigate the statistics of the data. Lei mentioned GNNs might not work if within-the-same-class edges are not more then out-of-the-same-class edges. So check if hateful users are connected more with other hateful users. Stuff about the smoothing.
+- [x] Investigate the statistics of the data. Lei mentioned GNNs might not work if within-the-same-class edges are not more then out-of-the-same-class edges. So check if hateful users are connected more with other hateful users. Stuff about the smoothing.
 - [ ] Set bag-of-words baselines
 - [ ] Review the methods that are applied on this dataset. Check the papers that cites the [original paper](https://arxiv.org/abs/1803.08977). 
 
@@ -51,4 +75,9 @@
 ### Understanding Dataset
 
 - [ ] Check if RT's have text
+
 - [ ] How they labeled hateful users. Did they classify using the author's tweets, or were retweets considered as well.
+
+- [x] Are there replies without tweet IDs, directly to the user? (like mentions)
+
+  ​	-> Yes. 275K out of 4M
