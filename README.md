@@ -48,6 +48,34 @@
 
   ![rt0](imgs/rp_b_3.png)
 
+Additional remarks from paper about node features:
+
+> hateful users tweet more frequently, follow more people each day and their accounts are more short-lived and recent
+
+
+
+### Remarks on Dataset
+
+Data Collection
+
+> We represent the connections among users in Twitter using the retweet network (Cha et al. 2010). Sampling the retweet network is hard as we can only observe out-coming edges (due to API limitations), and as it is known that any unbiased in-degree estimation is impossible without sampling most of these “hidden” edges in the graph (Ribeiro et al. 2012). Acknowledging this limitation, we employ Ribeiro et al. Direct Unbiased Random Walk algorithm, which estimates out-degrees distribution efficiently by performing random jumps in an undirected graph it constructs online (Ribeiro, Wang, and Towsley 2010). Fortunately, in the retweet graph the outcoming edges of each user represent the other users she - usually (Guerra et al. 2017) - endorses. With this strategy, we collect a sample of Twitter retweet graph with 100, 386 users and 2, 286, 592 retweet edges along with the 200 most recent tweets for each users, as shown in Figure 1. This graph is unbiased w.r.t. the out degree distribution of nodes.
+
+How they selected which nodes to label:
+
+> As the sampled graph is too large to be annotated entirely, we need to select a subsample to be annotated. If we choose tweets uniformly at random, we risk having a very insignificant percentage of hate speech in the subsample. On the other hand, if we choose only tweets that use obvious hate speech features, such as offensive racial slurs, we will stumble in the same problems pointed in previous work. We propose a method between these two extremes. We:
+>
+> - Create a lexicon of words that are mostly used in the context of hate speech. This is unlike other work (Davidson et al. 2017) as we do not consider words that are employed in a hateful context but often used in other contexts in a harmless way (e.g. '*n\*gger*'); We use 23 words such as '*holohoax*', '*racial treason*' and '*white genocide*', handpicked from [Hatebase.org](hatebase.org) (Hate Base 2017), and ADL’s hate symbol database (ADL 2017). 
+>
+> - Run a diffusion process on the graph based on DeGroot’s Learning Model (Golub and Jackson 2010), assigning an initial belief $p_i^0=1$ to each user $u_i$ who employed the words in the lexicon; This prevents our sample from being excessively small or biased towards some vocabulary. 
+>
+>   ![datacol_diffusion](imgs/datacol_diffusion.png)
+>
+> - Divide the users in $4$ strata according to their associated beliefs after the diffusion process, and perform a stratified sampling, obtaining up to $1500$ user per strata.
+
+How did annotaters label:
+
+> Annotators were asked to consider the entire profile (limiting the tweets to the ones collected) rather than individual publications or isolate words and were given examples of terms and codewords in ADL’s hate symbol database. Each user profile was independently annotated by 3 annotators, and, if there was disagreement, up to 5 annotators.
+
 
 
 
@@ -56,7 +84,7 @@
 
 ## Nov 13
 
-- [ ] Figure out the design of the dataset and understand the content
+- [x] Figure out the design of the dataset and understand the content
 
   - We have two zip files. One of them contains the data that is publicized on Kaggle. This doesn't have tweets. It has userIDs and edges with timestamps 
 
@@ -74,10 +102,41 @@
 
 ### Understanding Dataset
 
-- [ ] Check if RT's have text
+- [x] Check if RT's have text
 
-- [ ] How they labeled hateful users. Did they classify using the author's tweets, or were retweets considered as well.
+  ​	-> yes
+
+- [x] How they labeled hateful users. Did they classify using the author's tweets, or were retweets considered as well.
+
+  > In this paper we characterize and detect hateful users on Twitter, which we define according to Twitter’s hateful conduct guidelines. We collect a dataset of 100,386 users along with up to 200 tweets for each with a random-walk-based crawler on Twitter’s retweet graph. We identify users that employed words from a set of hate speech related lexicon, and generate a subsample selecting users that are in different distances to such users. These are manually annotated as hateful or not through crowdsourcing. The aforementioned distances are real valued numbers obtained through a diffusion process in which the users who used the words in the lexicon are seeds. We create a dataset containing 4,972 manually annotated users, of which 544 were labeled as hateful. We also find the users that have been suspended after the data collection - before and after Twitter’s guideline changes, which happened on the 18/Dec/17.
 
 - [x] Are there replies without tweet IDs, directly to the user? (like mentions)
 
   ​	-> Yes. 275K out of 4M
+  
+- [x] date distribution
+
+  | quantile   | date   |
+  | ---- | ---- |
+  | 0.00 |  2006-12-17 |
+  | 0.05 |  2017-03-04 |
+  | 0.10 |  2017-06-24 |
+  | 0.15 |  2017-08-11 |
+  | 0.20 |  2017-09-05 |
+  | 0.25 |  2017-09-20 |
+  | 0.30 |  2017-09-29 |
+  | 0.35 |  2017-10-06 |
+  | 0.40 |  2017-10-11 |
+  | 0.45 |  2017-10-15 |
+  | 0.50 |  2017-10-18 |
+  | 0.55 |  2017-10-20 |
+  | 0.60 |  2017-10-23 |
+  | 0.65 |  2017-10-24 |
+  | 0.70 |  2017-10-25 |
+  | 0.75 |  2017-10-26 |
+  | 0.80 |  2017-10-27 |
+  | 0.85 |  2017-10-28 |
+  | 0.90 |  2017-10-29 |
+  | 0.95 |  2017-10-30 |
+  | 1.00 |  2017-11-01 |
+  
