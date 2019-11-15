@@ -54,11 +54,11 @@ Additional remarks from paper about node features:
 
 
 
-### Remarks on Dataset
+### Remarks on the Dataset
 
 Data Collection
 
-> We represent the connections among users in Twitter using the retweet network (Cha et al. 2010). Sampling the retweet network is hard as we can only observe out-coming edges (due to API limitations), and as it is known that any unbiased in-degree estimation is impossible without sampling most of these “hidden” edges in the graph (Ribeiro et al. 2012). Acknowledging this limitation, we employ Ribeiro et al. Direct Unbiased Random Walk algorithm, which estimates out-degrees distribution efficiently by performing random jumps in an undirected graph it constructs online (Ribeiro, Wang, and Towsley 2010). Fortunately, in the retweet graph the outcoming edges of each user represent the other users she - usually (Guerra et al. 2017) - endorses. With this strategy, we collect a sample of Twitter retweet graph with 100, 386 users and 2, 286, 592 retweet edges along with the 200 most recent tweets for each users, as shown in Figure 1. This graph is unbiased w.r.t. the out degree distribution of nodes.
+> We represent the connections among users in Twitter using the retweet network (Cha et al. 2010). Sampling the retweet network is hard as we can only observe out-coming edges (due to API limitations), and as it is known that any unbiased in-degree estimation is impossible without sampling most of these “hidden” edges in the graph (Ribeiro et al. 2012). Acknowledging this limitation, we employ Ribeiro et al. Direct Unbiased Random Walk algorithm, which estimates out-degrees distribution efficiently by performing random jumps in an undirected graph it constructs online (Ribeiro, Wang, and Towsley 2010). Fortunately, in the retweet graph the outcoming edges of each user represent the other users she - usually (Guerra et al. 2017) - endorses. With this strategy, we collect a sample of Twitter retweet graph with 100,386 users and 2,286,592 retweet edges along with the 200 most recent tweets for each users, as shown in Figure 1. This graph is unbiased w.r.t. the out degree distribution of nodes.
 
 How they selected which nodes to label:
 
@@ -70,7 +70,7 @@ How they selected which nodes to label:
 >
 >   ![datacol_diffusion](imgs/datacol_diffusion.png)
 >
-> - Divide the users in $4$ strata according to their associated beliefs after the diffusion process, and perform a stratified sampling, obtaining up to $1500$ user per strata.
+> - Divide the users in 4 strata according to their associated beliefs after the diffusion process, and perform a stratified sampling, obtaining up to 1500 user per strata.
 
 How did annotaters label:
 
