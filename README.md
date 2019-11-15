@@ -78,6 +78,53 @@ How did annotaters label:
 
 
 
+### Work on the Logistic Model for Baseline
+
+#### Data
+
+Out of 1037 features:
+
+- 204 features that are based on a user's attributes and tweet lexicon
+- 300 glove, and 300 c_glove features
+- Neighborhood aggregated same features ‘c_’Sentiment, hashtags, centrality measures like 'betweenness', 'eigenvector', 'in_degree', 'out_degree'
+- Sentiment, hashtags, centrality measures like 'betweenness', 'eigenvector', 'in_degree', 'out_degree'
+
+Only 204 features mentioned below are used
+
+> ['statuses_count', 'followers_count', 'followees_count',……... 
+>
+> 'negotiate_empath', 'vehicle_empath', 'science_empath', 'timidity_empath', 'gain_empath', 'swearing_terms_empath', 'office_empath', 'tourism_empath', 'computer_empath',……..... 
+>
+> 'subjectivity', 'number hashtags', 'tweet number', 'retweet number', 'quote number', 'status length', 'number urls', 'baddies', 'mentions']
+
+Train/test split:
+60% train, 40% test
+-> Data may be small for learning deep models
+
+#### Results for 204 feature baselines
+
+![baseline_1](imgs/baseline2.png)
+
+**Logistic regression** Auc: 0.87, Accuracy: 0.84
+**MLP** *(2 hidden layers, 64 and 128 dim)* Auc: 0.89
+
+
+
+### Citations of the original paper
+
+- Network Representation Learning from Alibaba [[1]](https://www.ijcai.org/proceedings/2018/0438.pdf) which propose an encoder decoder network for n-gram task of predicting neighbors features, and then using the user encodings for link prediction and node classification
+- Survey on Social Media-based User Embedding[[2]](https://arxiv.org/abs/1907.00725) 
+- NLP approaches with tweet classification [[3]](https://www.aclweb.org/anthology/P19-1163.pdf)[[4]](https://www.aclweb.org/anthology/W18-4422.pdf)[[5]](https://link.springer.com/article/10.1007/s13278-019-0587-5) and dialogue modeling [[6]](https://arxiv.org/pdf/1909.01362.pdf)
+- Outlier detection on retweets using features from source, target, and tweet[[7]](https://link.springer.com/chapter/10.1007/978-3-030-14459-3_12)[[8]](https://arxiv.org/abs/1906.02541)[[9]](https://www-complexnetworks.lip6.fr/~lamarche/pdf/botterman_et_al_2019_ODYCCEUS.pdf) for thing like event detection
+- Hate detection in other data modalities like images on Instagram[[10]](http://precog.iiitd.edu.in/pubs/Maybe_Look_Closer-IEEE_BigMM.pdf) 
+- Survey [[11]](https://link.springer.com/article/10.1007/s00778-019-00569-6) on data management
+- Least Recent Influencer Model [[12]](https://dl.acm.org/citation.cfm?id=3326034) to calculate a hand-crafted measure and diffuse it over the network using a similar dataset
+- Feature selection [[13]](https://repositorio-aberto.up.pt/bitstream/10216/119511/2/326963.pdf)
+- Multimodal Embedding learning for users, tweets and pictures for retrieval tasks[[id]](https://arxiv.org/abs/1905.07075)
+- Social studies [[14]](https://ora.ox.ac.uk/objects/uuid:3c32d29d-e2e4-4913-abf8-2a28886f55a7)[[15]](https://wvvw.aaai.org/ojs/index.php/ICWSM/article/view/3354)
+- Causal inference on graphs [[16]](https://why19.causalai.net/papers/elena-zheleva.pdf)
+- Analyses[[17]](https://arxiv.org/pdf/1901.09735.pdf)[[18]](https://arxiv.org/pdf/1909.10966.pdf)
+
 
 
 # TO-DO List
@@ -96,7 +143,7 @@ How did annotaters label:
 
 - [x] Investigate the statistics of the data. Lei mentioned GNNs might not work if within-the-same-class edges are not more then out-of-the-same-class edges. So check if hateful users are connected more with other hateful users. Stuff about the smoothing.
 - [x] Set bag-of-words baselines
-- [ ] Review the methods that are applied on this dataset. Check the papers that cites the [original paper](https://arxiv.org/abs/1803.08977). 
+- [x] Review the methods that are applied on this dataset. Check the papers that cites the [original paper](https://arxiv.org/abs/1803.08977). 
 
 
 
