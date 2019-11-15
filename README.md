@@ -82,7 +82,7 @@ How did annotaters label:
 
 # TO-DO List
 
-## Nov 13
+## Week of Nov 11
 
 - [x] Figure out the design of the dataset and understand the content
 
@@ -95,7 +95,7 @@ How did annotaters label:
     > **users_neighborhood.csv**: this file has two rows related to the IDs: `user_id` is the id used in the graph which is on Kaggle and `user_id_original` links with the tweets!
 
 - [x] Investigate the statistics of the data. Lei mentioned GNNs might not work if within-the-same-class edges are not more then out-of-the-same-class edges. So check if hateful users are connected more with other hateful users. Stuff about the smoothing.
-- [ ] Set bag-of-words baselines
+- [x] Set bag-of-words baselines
 - [ ] Review the methods that are applied on this dataset. Check the papers that cites the [original paper](https://arxiv.org/abs/1803.08977). 
 
 
@@ -104,15 +104,15 @@ How did annotaters label:
 
 - [x] Check if RT's have text
 
-  ​	-> yes
+  - Yes
 
 - [x] How they labeled hateful users. Did they classify using the author's tweets, or were retweets considered as well.
 
-  > In this paper we characterize and detect hateful users on Twitter, which we define according to Twitter’s hateful conduct guidelines. We collect a dataset of 100,386 users along with up to 200 tweets for each with a random-walk-based crawler on Twitter’s retweet graph. We identify users that employed words from a set of hate speech related lexicon, and generate a subsample selecting users that are in different distances to such users. These are manually annotated as hateful or not through crowdsourcing. The aforementioned distances are real valued numbers obtained through a diffusion process in which the users who used the words in the lexicon are seeds. We create a dataset containing 4,972 manually annotated users, of which 544 were labeled as hateful. We also find the users that have been suspended after the data collection - before and after Twitter’s guideline changes, which happened on the 18/Dec/17.
+  - I have added for this above 
 
 - [x] Are there replies without tweet IDs, directly to the user? (like mentions)
 
-  ​	-> Yes. 275K out of 4M
+  - Yes. 275K out of 4M
   
 - [x] date distribution
 
