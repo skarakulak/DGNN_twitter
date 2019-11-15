@@ -129,7 +129,7 @@ Train/test split:
 
 # TO-DO List
 
-## Week of Nov 11
+##  Nov 12
 
 - [x] Figure out the design of the dataset and understand the content
 
@@ -187,3 +187,12 @@ Train/test split:
   | 0.95 |  2017-10-30 |
   | 1.00 |  2017-11-01 |
   
+
+
+
+### Nov 15
+
+- [ ] Read GraphSAGE, review the code of the original paper.
+- [ ] Reproduce GraphSAGE results and work on GCN results
+- [ ] Formulate alternatives for how to make use of *fake-nodes* to add dynamic structure into static graphs.
+- [ ] Review the previous dynamic implementation and check how to adapt that to current dataset
