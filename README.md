@@ -192,7 +192,16 @@ Train/test split:
 
 ### Nov 15
 
-- [ ] Read GraphSAGE, review the code of the original paper.
+- [x] Read GraphSAGE, review the code of the original paper.
 - [ ] Reproduce GraphSAGE results and work on GCN results
-- [ ] Formulate alternatives for how to make use of *fake-nodes* to add dynamic structure into static graphs.
-- [ ] Review the previous dynamic implementation and check how to adapt that to current dataset
+- [x] Formulate alternatives for how to make use of *fake-nodes* to add dynamic structure into static graphs.
+- [x] Review the previous dynamic implementation and check how to adapt that to current dataset
+
+
+
+### Nov 21
+
+- [ ] Get the original code to work. 
+- [ ] Make modifications that are necessary to use fake nodes for the original implementation
+- [ ] Read [Training on Giant Graphs](https://docs.dgl.ai/tutorials/models/index.html#training-on-giant-graphs) section of the DGL library and the [Streaming Graph Neural Network](https://arxiv.org/abs/1810.10627) paper
+- [ ] Start implementing *sampling* on the dynamic GNN and discuss issues
