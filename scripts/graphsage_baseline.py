@@ -48,15 +48,19 @@ num_nodes = 100386
 
 
 aggregator_type = 'mean' #mean/gcn/pool/lstm
-hid_dim = 512
-n_layers = 2
-dropout = 0
+hid_dims = [128, 256, 512]
+defhiddim = 256
+n_layers = [1, 2, 4]
+defnlayer = 2
+dropouts = [0, 0.1, 0.2]
+defdropout = 0.1
 learning_rate = 0.003
-wt_decay = 0
+wt_decays = [0, 5e-4, 5e-3, 5e-2, 5e-1, 1]
+defwtdecay = 5e-4
 stpsize = 60
 checkpt_iter = 5
-n_epochs = 100
-out_path = '/misc/vlgscratch4/BrunaGroup/rj1408/dynamic_nn/models/twitter/repro/'
+n_epochs = 150
+out_path = '/misc/vlgscratch4/BrunaGroup/rj1408/dynamic_nn/models/twitter/hyper/'
 data_path = '../twitter_data/public/'
 activation = F.tanh
 
@@ -274,7 +278,7 @@ def train_model(model, criterion, optimizer, scheduler, device, checkpoint_path,
         outputs = model(feats, graph).flatten()
         labels = graph.ndata['labels']
         labels = labels.to(device)
-        loss = criterion(outputs[train_mask], labels[train_mask])
+        loss = criterion(outputs[balanced_train_mask], labels[balanced_train_mask])
         epoch_loss = loss.item()
         loss.backward()
         optimizer.step()
@@ -313,40 +317,46 @@ def train_model(model, criterion, optimizer, scheduler, device, checkpoint_path,
     model.load_state_dict(best_model_wts)
     return model
 
+hid_dims = [128, 256, 512]
+defhiddim = 256
+n_layers = [1, 2, 4]
+defnlayer = 2
+dropouts = [0, 0.1, 0.2]
+defdropout = 0.1
+learning_rate = 0.003
+wt_decays = [0, 5e-4, 5e-3, 5e-2, 5e-1, 1]
+defwtdecay = 5e-4
 
-# In[60]:
+bestauc = 0
+bestaccuracy = 0
 
-
-# create GCN model
-model = GraphSAGE(graph.ndata['feat'].shape[1], hid_dim, 1, n_layers, activation, dropout, aggregator_type)
-model.to(device)
-criterion = nn.BCEWithLogitsLoss()
-model_parameters = [p for p in model.parameters() if p.requires_grad]
-optimizer = optim.Adam(model_parameters, lr=learning_rate, weight_decay = wt_decay)
-exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=stpsize, gamma=0.1)
-hyper_params = {'hid_dim': hid_dim,
-   'n_layers' : n_layers,
-   'dropout' : dropout,
-   'wt_decay' : wt_decay}
-
-bst_model = train_model(model, criterion, optimizer, exp_lr_scheduler, device, out_path, graph, checkpt_iter, hyper_params, n_epochs)
-
-
-# In[61]:
-
-
-logits = predict_logits(bst_model, device, graph, val_mask)
-auc, accuracy = evaluate(logits.cpu(), labels[val_mask].long())
-
-
-# In[62]:
-
-
-auc, accuracy
-
-
-# In[ ]:
-
-
-
-
+for hiddim in hid_dims:
+    for nlayer in n_layers:
+        for drpout in dropouts:
+            for wtdecay in wt_decays:
+                # create GCN model
+                model = GraphSAGE(graph.ndata['feat'].shape[1], hiddim, 1, nlayer, activation, drpout, aggregator_type)
+                model.to(device)
+                criterion = nn.BCEWithLogitsLoss()
+                model_parameters = [p for p in model.parameters() if p.requires_grad]
+                optimizer = optim.Adam(model_parameters, lr=learning_rate, weight_decay = wtdecay)
+                exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=stpsize, gamma=0.1)
+                hyper_params = {'hid_dim': hiddim,
+                   'n_layers' : nlayer,
+                   'dropout' : drpout,
+                   'wt_decay' : wtdecay}
+                new_out_path = os.path.join(out_path, str(hiddim) + '_' + str(nlayer) +'_' + str(drpout) + '_' + str(wtdecay))
+                
+                if not os.path.exists(new_out_path):
+                    os.makedirs(new_out_path)
+                
+                bst_model = train_model(model, criterion, optimizer, exp_lr_scheduler, device, new_out_path, graph, checkpt_iter, hyper_params, n_epochs)
+                logits = predict_logits(bst_model, device, graph, val_mask)
+                auc, accuracy = evaluate(logits.cpu(), labels[val_mask].long())
+                
+                if auc > bestauc:
+                    bestauc = auc
+                    finalbstmodel = bst_model
+                    bestaccuracy = accuracy
+                    
+print("Best auc and accuracy: ", bestauc, bestaccuracy)
