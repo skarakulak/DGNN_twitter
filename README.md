@@ -56,6 +56,7 @@ Additional remarks from paper about node features:
 > Hateful users do not seem to behave like spammers.  
 > Choice of vocabulary is different: words related to hate, anger and politics occur less often when compared to their normal counterparts, and words related to masculinity, love and curses occur more often  
 > Hateful users are 71 times more likely to retweet other hateful users and suspended users are 11 times more likely to retweet other suspended users  
+> Hateful users are “power users” in the sense that they tweet more, in shorter intervals, favorite more tweets by other people and follow other users more  
 
 
 ### Remarks on the Dataset
