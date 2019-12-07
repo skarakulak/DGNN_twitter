@@ -50,19 +50,19 @@ num_nodes = 100386
 aggregator_type = 'mean' #mean/gcn/pool/lstm
 hid_dims = [128, 256, 512]
 defhiddim = 256
-n_layers = [1, 2, 3]
+n_layers = [1, 2, 4]
 defnlayer = 2
 dropouts = [0, 0.1, 0.2]
 defdropout = 0.1
-learning_rate = 0.0003
-wt_decays = [3e-7, 3e-6, 3e-5]
+learning_rate = 0.003
+wt_decays = [0, 5e-4, 5e-3, 5e-2, 5e-1, 1]
 defwtdecay = 5e-4
 stpsize = 60
 checkpt_iter = 5
-n_epochs = 100
+n_epochs = 150
 out_path = '/misc/vlgscratch4/BrunaGroup/rj1408/dynamic_nn/models/twitter/hyper/'
 data_path = '../twitter_data/public/'
-activation = F.leaky_relu
+activation = F.tanh
 
 
 # In[46]:
@@ -169,17 +169,17 @@ class GraphSAGE(nn.Module):
                  dropout,
                  aggregator_type):
         super(GraphSAGE, self).__init__()
-
+        
         self.droplayer = nn.Dropout(p=dropout)
-
+        
         # input layer
         self.inplayer = nn.Linear(in_feats, n_hidden)
-
+        
         self.layers = nn.ModuleList()
         # hidden layers
         for i in range(n_layers):
             self.layers.append(SAGEConv(n_hidden, n_hidden, aggregator_type, feat_drop=dropout, activation=activation))
-
+        
         # output layer
         self.outlayer = nn.Linear(n_hidden, n_classes)
 
@@ -187,10 +187,10 @@ class GraphSAGE(nn.Module):
         h = features
         h = self.inplayer(h)
         h = self.droplayer(h)
-
+        
         for layer in self.layers:
             h = layer(graph, h)
-
+            
         h = self.outlayer(h)
         return h
 
@@ -205,20 +205,20 @@ def predict_logits(model, device, graph, mask=None):
     with torch.no_grad():
         features = graph.ndata['feat'].to(device)
         logits = model(features, graph).flatten()
-
+        
         if mask is not None:
             logits = logits[mask]
     return logits
 
-def evaluate(logits, labels, mask=None):
+def evaluate(logits, labels, mask=None): 
     if mask is not None:
         logits = logits[mask]
         labels = labels[mask]
-
+    
     sigLayer = nn.Sigmoid()
     predictions_scores = sigLayer(logits).detach().numpy()
     roc_auc = metrics.roc_auc_score(labels, predictions_scores)
-
+    
     indices = (logits > 0).long()
     correct = torch.sum(indices == labels)
     return (roc_auc, correct.item() * 1.0 / len(labels))
@@ -229,7 +229,7 @@ def evaluate(logits, labels, mask=None):
 
 def evaluate_loss(model, criterion, device, val_mask, graph):
     model.eval()
-
+    
     #validation phase
     with torch.set_grad_enabled(False):
         feat = graph.ndata['feat'].to(device)
@@ -252,24 +252,24 @@ def train_model(model, criterion, optimizer, scheduler, device, checkpoint_path,
     metrics_dict["train"]["loss"]["epochwise"] = []
     metrics_dict["valid"]["loss"] = {}
     metrics_dict["valid"]["loss"]["epochwise"] = []
-
+        
     since = time.time()
 
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = 1e10
 
     for epoch in range(num_epochs):
-
+        
         und_sampled_normal_idx = training_normals.nonzero()[
             bernoulli.sample([training_normals.sum()]).bool()].flatten()
 
         balanced_train_mask = torch.zeros(train_mask.size(0),dtype=torch.bool)
         balanced_train_mask[training_hatefuls] = True
         balanced_train_mask[und_sampled_normal_idx] = True
-
+        
         #train phase
         scheduler.step()
-        model.train()
+        model.train() 
         optimizer.zero_grad()
         # forward
         # track history if only in train
@@ -283,25 +283,25 @@ def train_model(model, criterion, optimizer, scheduler, device, checkpoint_path,
         loss.backward()
         optimizer.step()
         forward_time = time.time() - forward_start_time
-
+        
         #validation phase
         val_epoch_loss = evaluate_loss(model, criterion, device, val_mask, graph)
-
+        
         metrics_dict["train"]["loss"]["epochwise"].append(epoch_loss)
         metrics_dict["valid"]["loss"]["epochwise"].append(val_epoch_loss)
-
+        
         # deep copy the model
         if val_epoch_loss < best_loss:
             best_loss = val_epoch_loss
             best_model_wts = copy.deepcopy(model.state_dict())
-
+            
         if epoch%checkpoint_iter==0:
             print('Epoch {}/{} \n'.format(epoch, num_epochs - 1))
             print('-' * 10)
             print('\n')
             print('Train Loss: {:.4f} \n'.format(epoch_loss))
             print('Validation Loss: {:.4f} \n'.format(val_epoch_loss))
-
+            
             torch.save({
             'epoch': epoch,
             'model_state_dict': model.state_dict(),
@@ -316,6 +316,16 @@ def train_model(model, criterion, optimizer, scheduler, device, checkpoint_path,
     # load best model weights
     model.load_state_dict(best_model_wts)
     return model
+
+hid_dims = [128, 256, 512]
+defhiddim = 256
+n_layers = [1, 2, 4]
+defnlayer = 2
+dropouts = [0, 0.1, 0.2]
+defdropout = 0.1
+learning_rate = 0.003
+wt_decays = [0, 5e-4, 5e-3, 5e-2, 5e-1, 1]
+defwtdecay = 5e-4
 
 bestauc = 0
 bestaccuracy = 0
@@ -336,17 +346,17 @@ for hiddim in hid_dims:
                    'dropout' : drpout,
                    'wt_decay' : wtdecay}
                 new_out_path = os.path.join(out_path, str(hiddim) + '_' + str(nlayer) +'_' + str(drpout) + '_' + str(wtdecay))
-
+                
                 if not os.path.exists(new_out_path):
                     os.makedirs(new_out_path)
-
+                
                 bst_model = train_model(model, criterion, optimizer, exp_lr_scheduler, device, new_out_path, graph, checkpt_iter, hyper_params, n_epochs)
                 logits = predict_logits(bst_model, device, graph, val_mask)
                 auc, accuracy = evaluate(logits.cpu(), labels[val_mask].long())
-
+                
                 if auc > bestauc:
                     bestauc = auc
                     finalbstmodel = bst_model
                     bestaccuracy = accuracy
-
+                    
 print("Best auc and accuracy: ", bestauc, bestaccuracy)

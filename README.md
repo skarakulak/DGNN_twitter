@@ -50,8 +50,13 @@
 
 Additional remarks from paper about node features:
 
-> hateful users tweet more frequently, follow more people each day and their accounts are more short-lived and recent
-
+> We define “hateful user” and “hate speech” according to Twitter’s guidelines. For the purposes of this paper, “hate speech” is any type of content that ‘promotes violence against or directly attack or threaten other people on the basis of race, ethnicity, national origin, sexual orientation, gender, gender identity, religious affiliation, age, disability, or disease.” (Twitter 2017) On the other hand, “hateful user” is a user that, according to annotators, endorses such type of content  
+> hateful users tweet more frequently, follow more people each day and their accounts are more short-lived and recent  
+> Although hateful users have less followers, the median for several network centrality measures in the retweet network is higher for these users.  
+> Hateful users do not seem to behave like spammers.  
+> Choice of vocabulary is different: words related to hate, anger and politics occur less often when compared to their normal counterparts, and words related to masculinity, love and curses occur more often  
+> Hateful users are 71 times more likely to retweet other hateful users and suspended users are 11 times more likely to retweet other suspended users  
+> Hateful users are “power users” in the sense that they tweet more, in shorter intervals, favorite more tweets by other people and follow other users more  
 
 
 ### Remarks on the Dataset
