@@ -3,7 +3,7 @@
 from torch import nn
 from torch.nn import functional as F
 
-from .... import function as fn
+from dgl import function as fn
 
 
 class HateSAGEConv(nn.Module):
@@ -57,8 +57,8 @@ class HateSAGEConv(nn.Module):
             self.fc_pool = nn.Linear(in_feats, in_feats)
         if aggregator_type == 'lstm':
             self.lstm = nn.LSTM(in_feats, in_feats, batch_first=True)
-        if aggregator_type != 'gcn':
-            self.fc_self = nn.Linear(in_feats, out_feats, bias=bias)
+        #if aggregator_type != 'gcn':
+        self.fc_self = nn.Linear(in_feats, out_feats, bias=bias)
         self.fc_neigh = nn.Linear(in_feats, out_feats, bias=bias)
         self.reset_parameters()
 
@@ -73,9 +73,7 @@ class HateSAGEConv(nn.Module):
             nn.init.xavier_uniform_(self.fc_self.weight, gain=gain)
         nn.init.xavier_uniform_(self.fc_neigh.weight, gain=gain)
         
-    def _message_func(edges):
-        print("inside message_func: edges src shape ")
-        print(edges.src['h'].shape)
+    def _message_func(self, edges):
         return {'m': edges.src['h']}
 
     def _lstm_reducer(self, nodes):
@@ -84,8 +82,6 @@ class HateSAGEConv(nn.Module):
         is slow, we could accelerate this with degree padding in the future.
         """
         m = nodes.mailbox['m'] # (B, L, D)
-        print("inside lstm reducter: printing m shape ")
-        print(m.shape)
         batch_size = m.shape[0]
         h = (m.new_zeros((1, batch_size, self._in_feats)),
              m.new_zeros((1, batch_size, self._in_feats)))
@@ -133,11 +129,12 @@ class HateSAGEConv(nn.Module):
             h_neigh = graph.ndata['neigh']
         else:
             raise KeyError('Aggregator type {} not recognized.'.format(self._aggre_type))
-        # GraphSAGE GCN does not require fc_self.
-        if self._aggre_type == 'gcn':
-            rst = self.fc_neigh(h_neigh)
-        else:
-            rst = self.fc_self(h_self) + self.fc_neigh(h_neigh)
+            
+#         # GraphSAGE GCN does not require fc_self.
+#         if self._aggre_type == 'gcn':
+#             rst = self.fc_neigh(h_neigh)
+#         else:
+        rst = self.fc_self(h_self) + self.fc_neigh(h_neigh)
         # activation
         if self.activation is not None:
             rst = self.activation(rst)
