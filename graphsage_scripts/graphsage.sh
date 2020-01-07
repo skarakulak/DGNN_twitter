@@ -15,5 +15,4 @@ module purge
 
 eval "$(conda shell.bash hook)"
 conda activate dgl_env
-cd scripts
 srun python3 graphsage_baseline.py
